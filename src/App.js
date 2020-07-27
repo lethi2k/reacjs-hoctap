@@ -1,70 +1,131 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState } from 'react';
+// import logo from './logo.svg';
 import './App.scss';
 // import Header from './compoments/Header';
-import ProductList from './compoments/ProductList';
-const productLists = [
-  {
-    "id": "21",
-    "name": "Intelligent Wooden Shirt",
-    "image": "http://lorempixel.com/640/480/abstract",
-    "price": "407.00"
-  },
-  {
-    "id": "22",
-    "name": "Small Metal Table",
-    "image": "http://lorempixel.com/640/480/fashion",
-    "price": "39.00"
-  },
-  {
-    "id": "23",
-    "name": "Unbranded Cotton Sausages",
-    "image": "http://lorempixel.com/640/480/city",
-    "price": "922.00"
-  },
-  {
-    "id": "24",
-    "name": "Sleek Frozen Chips",
-    "image": "http://lorempixel.com/640/480/sports",
-    "price": "697.00"
-  },
-  {
-    "id": "25",
-    "name": "Ergonomic Steel Shirt",
-    "image": "http://lorempixel.com/640/480/food",
-    "price": "498.00"
-  },
-  {
-    "id": "26",
-    "name": "Intelligent Concrete Bacon",
-    "image": "http://lorempixel.com/640/480/nature",
-    "price": "461.00"
-  },
-  {
-    "id": "27",
-    "name": "Handcrafted Concrete Hat",
-    "image": "http://lorempixel.com/640/480/fashion",
-    "price": "580.00"
-  },
-  {
-    "id": "28",
-    "name": "Incredible Cotton Tuna",
-    "image": "http://lorempixel.com/640/480/food",
-    "price": "57.00"
-  },
-  {
-    "id": "29",
-    "name": "Generic Plastic Tuna",
-    "image": "http://lorempixel.com/640/480/animals",
-    "price": "836.00"
-  }
-];
+// import ProductList from './compoments/ProductList';
+import "bootstrap/dist/css/bootstrap.css";
+import Sliderbar from './Slidebar';
+import Topbar from './Topbar';
+import Productbar from './Products';
+import AddForm from './compoments/AddForm/Index'
+import { productLists } from './dataFake';
+import Dashboard from './compoments/Dashboard';
+import ProductDetail from './Products/ProductDetail';
+import UpdateForm from './compoments/UpdateForm'
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  Redirect
+} from "react-router-dom";
+
 function App() {
+  const [products, setproducts] = useState(productLists);
+  // const test =
+  // {
+  //   "propBool": "true"
+  // };
+
+  // const [state, setState] = useState(false);
+  // const clickv = () => {
+  //   setState({
+  //     state: true
+  //   })
+  // };
+
+  // const shoot = () => {
+  //   document.getElementById("p2").style.background = "blue";
+  // };
+  const onHandleRemove = (id) => {
+    const newproducts = products.filter(product => product.id !== id);
+    setproducts(newproducts);
+    console.log(products);
+    console.log(newproducts);
+  };
+
+  const onHandleUpdate = (id) => {
+    const newproducts = products.filter(product => product.id == id);
+    console.log(newproducts);
+    setproducts(newproducts);
+   
+  };
+
+  const onHandleAdd = (product) => {
+    console.log(product);
+
+    setproducts(
+      [
+        ...products,
+        product
+      ]
+    );
+    return <Redirect to='/list' />
+
+  };
+
+
   return (
-    <div className="App">
-     {/* <Header products = {productLists}/> */}
-     <ProductList products = {productLists}/>
-    </div>
+    // <div className="App">
+
+    //   <button onClick={shoot} id = "p2">click vao me</button>
+    //   <h3>Bool: {test.propBool === "true" ? "da co bo" : "chua co bo"}</h3>
+    //   <div>
+    //     <p>{state ? "true" : "false"}</p>
+    //     <button onClick={clickv}>click vao me</button>
+
+    //     <p>You clicked {count} times</p>
+    //     <button onClick={() => setCount(count + 1)}>
+    //       Click me
+    //   </button>
+    //   </div>
+    //   {/* <Header products = {productLists}/> */}
+    //   <ProductList products={productLists} />
+    // </div>
+    <Router>
+      <div>
+        {/* Page Wrapper */}
+        <div id="wrapper">
+
+          <Sliderbar />
+          {/* Content Wrapper */}
+          <div id="content-wrapper" className="d-flex flex-column">
+            {/* Main Content */}
+            <div id="content">
+              <Topbar />
+              <div className="container-fluid">
+                <Switch>
+                  <Route exec path="/add">
+                    <AddForm onAdd={onHandleAdd} />
+                  </Route>
+                  <Route exec path="/update">
+                    <UpdateForm onAdd={onHandleAdd} />
+                  </Route>
+                  <Route exec path="/list">
+                    <Productbar products={products} onRemove={onHandleRemove} onUpdate={onHandleUpdate} />
+                  </Route>
+                  <Route exec path="/"><Dashboard /></Route>
+
+                </Switch>
+              </div>
+            </div>
+            {/* End of Main Content */}
+            {/* Footer */}
+            <footer className="sticky-footer bg-white">
+              <div className="container my-auto">
+                <div className="copyright text-center my-auto">
+                  <span>Copyright © Your Website 2020</span>
+                </div>
+              </div>
+            </footer>
+            {/* End of Footer */}
+          </div>
+          {/* End of Content Wrapper */}
+        </div>
+        {/* End of Page Wrapper */}
+
+      </div>
+    </Router>
   );
 }
 
